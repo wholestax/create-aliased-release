@@ -1,0 +1,31 @@
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  create-aliased-release:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@main
+      - name: setup node
+        uses: actions/setup-node@main
+        with:
+          node-version-file: ".nvmrc"
+      - name: Install Application
+        run: npm clean-install
+      - name: Build the Action
+        run: npm run build
+      - name: Run Unit Tests
+        run: npm run test
+      - name: Read Version
+        id: getversion
+        run: echo "version=$(cat VERSION)" >> $GITHUB_OUTPUT
+      - name: Create New Release
+        uses: wholestax/create-aliased-release@main
+        with:
+          validate-only: false
+          version: ${{ steps.getversion.outputs.version }}
+          body: Release number ${{ steps.getversion.outputs.version }}
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

@@ -1,0 +1,31 @@
+name: "Create Aliased Release"
+author: "Raul Reynoso"
+description: |-
+  Create semantically versioned releases and maintain aliases 
+  for major versions that return the most recent release for that major version
+inputs:
+  validate-only:
+    description: |-
+      If true, the action will only validate wether the version specified 
+      in the version file is valid. Passes if valid, fails otherwise.
+    required: true
+
+  version:
+    decription: |-
+      The path in the repo to the file that contains the version number for the release.
+    requried: true
+
+  files:
+    description: |-
+      A list of files to upload as part of the release, one per line.
+    required: false
+    default: ""
+
+  body:
+    description: |-
+      The body content to use for the release
+    default: ""
+
+runs:
+  using: "node20"
+  main: "dist/index.js"
